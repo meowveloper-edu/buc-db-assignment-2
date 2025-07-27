@@ -3,50 +3,50 @@ classDiagram
     direction LR
 
     class User {
-        +int userID
+        +int user_id
         +string username
         +string email
-        +timestamp creationDate
+        +timestamp creation_date
     }
 
     class Repository {
-        +int repoID
+        +int repo_id
         +string name
         +string description
-        +timestamp creationDate
+        +timestamp creation_date
     }
 
     class Commit {
-        +string commitID
+        +string commit_id
         +string message
-        +timestamp commitTimestamp
-        +string[] changedFiles
+        +timestamp commit_timestamp
+        +string[] changed_files
     }
 
     class Issue {
         <<abstract>>
-        +int issueID
+        +int issue_id
         +string title
         +string description
         +string status
-        +timestamp creationDate
+        +timestamp creation_date
     }
 
     class Bug {
-        +string stepsToReproduce
-        +string expectedBehavior
-        +string actualBehavior
+        +string steps_to_reproduce
+        +string expected_behavior
+        +string actual_behavior
     }
 
     class FeatureRequest {
-        +string featureDescription
-        +string acceptanceCriteria
+        +string feature_description
+        +string acceptance_criteria
     }
 
     class Comment {
-        +int commentID
+        +int comment_id
         +string text
-        +timestamp commentTimestamp
+        +timestamp comment_timestamp
     }
 
     User "1" -- "0..*" Repository : owns
