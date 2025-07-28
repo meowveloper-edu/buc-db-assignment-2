@@ -67,3 +67,42 @@ This file tracks the progress of our work on "Assignment Two".
 
 **Next Step:**
 - **Proceed with Task 2:** Write the complete SQL script to implement the defined design as a PostgreSQL object-relational database. This includes creating types, tables, constraints, and inserting sample data.
+---
+## Session 3: 2025-07-27
+
+### Task 2: PostgreSQL Implementation
+- **Objective:** Implement the database schema in PostgreSQL.
+- **Action:**
+    - Created the complete SQL script `postgres/queries.sql`.
+    - The script defines all necessary types, tables (including inheritance for `Issue`), and constraints.
+    - Sample data was added for all entities to ensure the model is populated.
+
+### Task 1: Diagram Recreation
+- **Objective:** Recreate the UML diagram in Draw.io format.
+- **Action:**
+    - The Mermaid diagram from `task1-uml-diagram.md` was converted into the Draw.io XML format.
+    - The new diagram was saved to `class-diagram.drawio`, overwriting the previous example file.
+
+---
+### Session End: 2025-07-27
+
+**Next Step:**
+- Execute the PostgreSQL script to create the database.
+- Proceed with Task 3: Implement the schema in MongoDB.
+---
+## Session 4: 2025-07-28
+
+### Task 2: PostgreSQL Refinement
+- **Objective:** Address an error in the foreign key constraints of the `comments` table.
+- **Action:**
+    - Modified the `comments` table in `postgres/queries.sql` to allow comments to be associated with either an `issue` or a `commit`.
+    - The `issue_id` column was made nullable.
+    - A new `commit_hash` column was added with a foreign key reference to the `commits` table.
+    - A `CHECK` constraint was added to ensure that a comment is linked to either an issue or a commit, but not both.
+    - The sample data was updated to include a comment on a commit.
+- **Reasoning:** This change provides a more flexible and realistic data model, where discussions can happen on both issues and specific commits.
+---
+### Session End: 2025-07-28
+
+**Next Step:**
+- Proceed with Task 3: Implement the schema in MongoDB.
