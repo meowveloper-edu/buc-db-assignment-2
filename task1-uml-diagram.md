@@ -49,20 +49,16 @@ classDiagram
         +timestamp comment_timestamp
     }
 
-    ' Association Relationships
     User "1" -- "0..*" Repository : owns
     User "1" -- "0..*" Commit : authors
     User "1" -- "0..*" Issue : reports
     User "1" -- "0..*" Comment : authors
 
-    ' Aggregation Relationship
     Repository "1" o-- "0..*" Commit : has
 
-    ' Composition Relationships
     Repository "1" *-- "0..*" Issue : contains
     Issue "1" *-- "0..*" Comment : contains
 
-    ' Inheritance Relationships
     Issue <|-- Bug
     Issue <|-- FeatureRequest
 ```
