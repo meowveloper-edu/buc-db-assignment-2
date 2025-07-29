@@ -106,3 +106,14 @@ This file tracks the progress of our work on "Assignment Two".
 
 **Next Step:**
 - Proceed with Task 3: Implement the schema in MongoDB.
+---
+## Session 5: 2025-07-30
+
+### Task 2: PostgreSQL Reset
+- **Objective:** Reset the PostgreSQL script to a clean, simple template.
+- **Action:**
+    - The content of `postgres/queries.sql` was completely replaced.
+    - The new script contains a basic example with `users`, `posts`, and `comments` tables, including `DROP`, `CREATE`, `INSERT`, and `SELECT` statements.
+- **Reasoning:** This provides a clean slate to build the required object-relational schema from scratch, as requested.
+---
+### Session End: 2025-07-30
