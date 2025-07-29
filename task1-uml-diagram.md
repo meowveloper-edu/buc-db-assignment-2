@@ -49,15 +49,20 @@ classDiagram
         +timestamp comment_timestamp
     }
 
+    ' Association Relationships
     User "1" -- "0..*" Repository : owns
     User "1" -- "0..*" Commit : authors
     User "1" -- "0..*" Issue : reports
     User "1" -- "0..*" Comment : authors
 
+    ' Aggregation Relationship
     Repository "1" o-- "0..*" Commit : has
-    Repository "1" o-- "0..*" Issue : has
 
-    Issue "1" o-- "0..*" Comment : has
+    ' Composition Relationships
+    Repository "1" *-- "0..*" Issue : contains
+    Issue "1" *-- "0..*" Comment : contains
+
+    ' Inheritance Relationships
     Issue <|-- Bug
     Issue <|-- FeatureRequest
 ```
@@ -66,29 +71,22 @@ classDiagram
 
 The UML class diagram above represents the entities for a source code repository management system. The design includes five main entities: `User`, `Repository`, `Commit`, `Issue` (as an abstract class), and `Comment`, with `Bug` and `FeatureRequest` as concrete implementations of `Issue`.
 
-- **User**: Represents the developer who owns repositories, authors commits, and interacts with issues.
-- **Repository**: Represents a project's code repository, which contains commits and issues.
-- **Commit**: Represents a snapshot of changes to the code. It includes a list of changed files.
-- **Issue**: An abstract class representing a generic issue. It has common attributes like `title`, `description`, and `status`.
-- **Bug**: A concrete class that inherits from `Issue` and adds specific attributes for bug reports, such as `stepsToReproduce`.
-- **FeatureRequest**: A concrete class that inherits from `Issue` and adds specific attributes for feature requests, such as `featureDescription`.
-- **Comment**: Represents a comment on an issue.
-
 **Relationships:**
 
-- **User-Repository**: A `User` can own multiple `Repositories` (one-to-many).
-- **User-Commit**: A `User` can author multiple `Commits` (one-to-many).
-- **User-Issue**: A `User` can report multiple `Issues` (one-to-many).
-- **User-Comment**: A `User` can author multiple `Comments` (one-to-many).
-- **Repository-Commit**: A `Repository` has multiple `Commits` (composition).
-- **Repository-Issue**: A `Repository` has multiple `Issues` (composition).
-- **Issue-Comment**: An `Issue` has multiple `Comments` (composition).
-- **Issue Inheritance**: `Bug` and `FeatureRequest` inherit from `Issue`, representing an "is-a" relationship.
+- **Association**: Standard relationships link a `User` to the `Repository` they own and the `Commits`, `Issues`, and `Comments` they author. These are simple links between independent objects.
+- **Inheritance**: `Bug` and `FeatureRequest` inherit from the abstract `Issue` class, representing a clear "is-a" relationship.
+- **Aggregation**: A `Repository` has a collection of `Commits`. This is a "whole-part" relationship, but the `Commits` are not destroyed if the `Repository` is deleted.
+- **Composition**: A `Repository` contains `Issues`, and an `Issue` contains `Comments`. This is a strong "part-of" relationship where the parts (`Issue`, `Comment`) are destroyed if their parent is deleted.
 
-**Complex Relationships:**
+**Complex Relationships Rationale:**
 
-- **Inheritance Hierarchy**: The design now features a clear inheritance hierarchy with the abstract `Issue` class and its concrete subclasses, `Bug` and `FeatureRequest`. This approach allows for a more structured and extensible design, as new issue types can be added by creating new subclasses of `Issue`. This directly addresses the requirement for complex relationships in the assignment brief.
-- **Composition**: The relationships between `Repository` and `Commit`, `Repository` and `Issue`, and `Issue` and `Comment` are modeled as composition. This accurately reflects that commits, issues, and comments are integral parts of their parent entities and cannot exist independently.
-- **Arrays**: The `Commit` entity's `changedFiles` attribute is an array of strings, providing a flexible way to store a variable number of modified files for each commit without needing a separate `File` entity.
+The design incorporates several complex relationships to accurately model the domain and meet the assignment requirements:
 
-This refined design provides a robust and scalable model for a source code repository management system, adhering to the principles of object-oriented design and meeting the assignment's requirements for complex relationships.
+- **Inheritance**: The use of an abstract `Issue` class with `Bug` and `FeatureRequest` subclasses provides a structured and extensible system. It allows for common issue properties to be defined in one place while enabling specialized attributes for different issue types. This is a classic "is-a" relationship.
+
+- **Association**: The links between `User` and other entities like `Commit` and `Issue` are modeled as standard associations. This is appropriate because these entities have independent lifecycles; for example, deleting a `Commit` does not delete the `User` who authored it.
+
+- **Aggregation**: The relationship between a `Repository` and its `Commits` is modeled as aggregation. A repository is a collection of commits, representing a "has-a" relationship. However, commits can be viewed as independent entities that could, in theory, be moved between repositories or exist conceptually on their own. This weaker lifecycle dependency makes aggregation more suitable than composition.
+
+- **Composition**: The relationships between `Repository` and `Issue`, and `Issue` and `Comment`, are modeled as composition. This represents a strong ownership where the "part" cannot exist without the "whole." An issue is intrinsically tied to a single repository and is meaningless without it. Likewise, a comment only exists within the context of a specific issue. Deleting a repository will cascade and delete its issues, and deleting an issue will delete its comments.
+

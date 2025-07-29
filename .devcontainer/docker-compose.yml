@@ -3,7 +3,7 @@ services:
         image: ghcr.io/meowveloper-edu/db-assignment-2:v1.0.0
         volumes:
             - ..:/workspaces/db-assignment-2
-        command: sh -c "mkdir -p ../data && chmod -R +x .. && sleep infinity"
+        command: sh -c "mkdir -p ../data && echo 'sleeping infinity' && sleep infinity"
         depends_on:
             - postgres
             - mongo

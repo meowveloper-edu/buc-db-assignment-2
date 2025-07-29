@@ -63,11 +63,6 @@ This file tracks the progress of our work on "Assignment Two".
     - The user decided to keep the current scope and not add the many-to-many relationship.
 
 ---
-### Session End: 2025-07-13
-
-**Next Step:**
-- **Proceed with Task 2:** Write the complete SQL script to implement the defined design as a PostgreSQL object-relational database. This includes creating types, tables, constraints, and inserting sample data.
----
 ## Session 3: 2025-07-27
 
 ### Task 2: PostgreSQL Implementation
@@ -84,12 +79,6 @@ This file tracks the progress of our work on "Assignment Two".
     - The new diagram was saved to `class-diagram.drawio`, overwriting the previous example file.
 
 ---
-### Session End: 2025-07-27
-
-**Next Step:**
-- Execute the PostgreSQL script to create the database.
-- Proceed with Task 3: Implement the schema in MongoDB.
----
 ## Session 4: 2025-07-28
 
 ### Task 2: PostgreSQL Refinement
@@ -101,11 +90,7 @@ This file tracks the progress of our work on "Assignment Two".
     - A `CHECK` constraint was added to ensure that a comment is linked to either an issue or a commit, but not both.
     - The sample data was updated to include a comment on a commit.
 - **Reasoning:** This change provides a more flexible and realistic data model, where discussions can happen on both issues and specific commits.
----
-### Session End: 2025-07-28
 
-**Next Step:**
-- Proceed with Task 3: Implement the schema in MongoDB.
 ---
 ## Session 5: 2025-07-30
 
@@ -115,5 +100,21 @@ This file tracks the progress of our work on "Assignment Two".
     - The content of `postgres/queries.sql` was completely replaced.
     - The new script contains a basic example with `users`, `posts`, and `comments` tables, including `DROP`, `CREATE`, `INSERT`, and `SELECT` statements.
 - **Reasoning:** This provides a clean slate to build the required object-relational schema from scratch, as requested.
+
+### Task 1: UML Diagram and Rationale Refinement
+- **Objective:** Refine the UML diagram and its rationale to correctly represent all required OOP concepts.
+- **Action:**
+    - Updated the Mermaid diagram in `task1-uml-diagram.md` to correctly distinguish between Aggregation (`Repository o-- Commit`) and Composition (`Repository *-- Issue`, `Issue *-- Comment`).
+    - Rewrote the rationale to clearly define and justify the use of all four relationship types: Association, Inheritance, Aggregation, and Composition, as implemented in the diagram.
+- **Reasoning:** This ensures the UML diagram and its explanation are accurate and fully meet the assignment's requirements for demonstrating complex relationships.
+
+### Task 1: Draw.io Diagram Synchronization
+- **Objective:** Synchronize the Draw.io diagram with the updated Mermaid diagram.
+- **Action:**
+    - Modified the `class-diagram.drawio` file to update the relationships.
+    - Changed the `Repository-Issue` and `Issue-Comment` relationships to Composition (filled diamond) and updated their labels to "contains".
+    - Ensured the `Repository-Commit` relationship remained as Aggregation (open diamond).
+- **Reasoning:** This keeps the visual Draw.io diagram consistent with the Mermaid diagram and the documented rationale.
+
 ---
 ### Session End: 2025-07-30
