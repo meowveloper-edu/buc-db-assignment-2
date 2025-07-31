@@ -170,3 +170,111 @@ INSERT INTO comments (text, author_id, commit_id) VALUES
 ('Good catch! This was a tricky one.', 1, 'i9j0k1l2'),
 ('Why did we choose to use this library? Seems a bit heavy.', 8, 'e5f6g7h8'),
 ('This change looks good to me. Approved.', 9, 'y5z6a7b8');
+
+--
+-- SQL Queries (Task 5)
+--
+
+-- Query 5a: Multi-Join Query
+-- Natural Language: Retrieves a list of users, the commits they have authored,
+-- and the repositories those commits belong to. It also includes any comments
+-- made on those specific commits. The list is filtered to show only commits
+-- that involved changes to more than one file. This query is embedded in a
+-- stored procedure as required.
+--
+CREATE OR REPLACE PROCEDURE get_comprehensive_commit_details()
+LANGUAGE plpgsql
+AS $PROCEDURE$
+BEGIN
+    -- This temporary table will hold the results.
+    -- It is dropped at the end of the procedure.
+    CREATE TEMP TABLE comprehensive_commit_details AS
+    SELECT
+        u.username AS author,
+        r.name AS repository_name,
+        c.commit_id,
+        c.message,
+        com.text AS comment_text
+    FROM
+        users u
+    INNER JOIN
+        commits c ON u.user_id = c.author_id
+    INNER JOIN
+        repositories r ON c.repo_id = r.repo_id
+    LEFT JOIN
+        comments com ON c.commit_id = com.commit_id
+    WHERE
+        array_length(c.changed_files, 1) > 1;
+END;
+$PROCEDURE$;
+
+-- Execute the procedure and display its results.
+CALL get_comprehensive_commit_details();
+SELECT * FROM comprehensive_commit_details;
+
+-- Query 5b: Set Operator Query (UNION)
+-- Natural Language: Creates a stored procedure that produces a single list of
+-- unique usernames for all users who have either authored a commit or reported a bug.
+--
+CREATE OR REPLACE PROCEDURE get_active_users()
+LANGUAGE plpgsql
+AS $PROCEDURE$
+BEGIN
+    CREATE TEMP TABLE active_users AS
+    (SELECT u.username
+     FROM users u
+     INNER JOIN commits c ON u.user_id = c.author_id)
+    UNION
+    (SELECT u.username
+     FROM users u
+     INNER JOIN bugs b ON u.user_id = b.reporter_id);
+END;
+$PROCEDURE$;
+
+-- Execute the procedure and display its results.
+CALL get_active_users();
+SELECT * FROM active_users;
+
+-- Query 5c: Array/Inheritance Query (using a Stored Function)
+-- Natural Language: Creates a stored function that takes a repository ID as
+-- input and returns a table of all bug reports for that repository, including
+-- their full details and a calculated "age" (how long ago they were created).
+-- This demonstrates querying an inherited table (`bugs`).
+--
+CREATE OR REPLACE FUNCTION get_bugs_for_repository(p_repo_id INT)
+RETURNS TABLE (
+    issue_id INT,
+    title VARCHAR(255),
+    description TEXT,
+    status issue_status,
+    reporter_id INT,
+    repo_id INT,
+    steps_to_reproduce TEXT,
+    expected_behavior TEXT,
+    actual_behavior TEXT,
+    age INTERVAL
+)
+LANGUAGE plpgsql
+AS $FUNCTION$
+BEGIN
+    RETURN QUERY
+    SELECT
+        b.issue_id,
+        b.title,
+        b.description,
+        b.status,
+        b.reporter_id,
+        b.repo_id,
+        b.steps_to_reproduce,
+        b.expected_behavior,
+        b.actual_behavior,
+        AGE(CURRENT_TIMESTAMP, b.creation_date) AS age
+    FROM
+        bugs b
+    WHERE
+        b.repo_id = p_repo_id;
+END;
+$FUNCTION$;
+
+-- Execute the function and display its results for repository 1.
+SELECT * FROM get_bugs_for_repository(1);
