@@ -282,3 +282,21 @@ $FUNCTION$;
 
 -- Execute the function and display its results for repository 1.
 SELECT * FROM get_bugs_for_repository(1);
+
+-- Query 5d: Temporal Query
+-- Natural Language: Finds all pairs of commits that were made within 5 minutes
+-- of each other in the same repository. This could help identify a quick
+-- succession of related changes.
+--
+SELECT
+    c1.commit_id AS first_commit,
+    c1.commit_timestamp AS first_commit_time,
+    c2.commit_id AS second_commit,
+    c2.commit_timestamp AS second_commit_time,
+    c2.commit_timestamp - c1.commit_timestamp AS time_difference
+FROM
+    commits c1
+INNER JOIN
+    commits c2 ON c1.repo_id = c2.repo_id AND c1.commit_id < c2.commit_id
+WHERE
+    c2.commit_timestamp - c1.commit_timestamp BETWEEN INTERVAL '0 seconds' AND INTERVAL '5 minutes';
