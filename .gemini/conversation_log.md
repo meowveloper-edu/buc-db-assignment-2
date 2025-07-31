@@ -168,5 +168,12 @@ This file tracks the progress of our work on "Assignment Two".
     - Generates a summary report of issue counts with subtotals for each repository and a grand total.
 - **Status:** All five required SQL queries for Task 5 are complete and included in the `postgres/queries.sql` script.
 
+### Documentation
+- **Objective:** Create a detailed explanation of the PostgreSQL script.
+- **Action:**
+    - Created a new directory `.doc`.
+    - Created a new file `.doc/postgre.md`.
+    - Wrote a comprehensive explanation of the object-relational features (ENUMs, Inheritance, Arrays), the trigger mechanism, the stored procedures/functions, and the advanced SQL queries used in the script.
+
 ---
 ### Session End: 2025-07-31
