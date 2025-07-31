@@ -300,3 +300,19 @@ INNER JOIN
     commits c2 ON c1.repo_id = c2.repo_id AND c1.commit_id < c2.commit_id
 WHERE
     c2.commit_timestamp - c1.commit_timestamp BETWEEN INTERVAL '0 seconds' AND INTERVAL '5 minutes';
+
+-- Query 5e: OLAP Query (ROLLUP)
+-- Natural Language: Generates a report that counts the number of issues,
+-- breaking the count down by repository and by status. It includes sub-totals
+-- for each repository and a grand total for all issues.
+--
+SELECT
+    COALESCE(r.name, 'All Repositories') AS repository_name,
+    COALESCE(i.status::TEXT, 'All Statuses') AS issue_status,
+    COUNT(i.issue_id) AS number_of_issues
+FROM
+    issues i
+INNER JOIN
+    repositories r ON i.repo_id = r.repo_id
+GROUP BY
+    ROLLUP(r.name, i.status);
