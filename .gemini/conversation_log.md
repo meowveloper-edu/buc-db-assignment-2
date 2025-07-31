@@ -137,5 +137,27 @@ This file tracks the progress of our work on "Assignment Two".
     - **Problem:** The `CREATE FUNCTION` statement failed due to a syntax error when the script was executed. The `psql` client misinterpreted the `$$` delimiters.
     - **Solution:** Modified the trigger function definition to use named dollar quoting (`$FUNCTION$`), which provides a more robust way to define the function body and resolves the syntax error.
 - **Status:** The `postgres/queries.sql` script is now complete and executes successfully, fully creating and populating the object-relational database as per the requirements for Task 2.
+
+---
+## Session 7: 2025-07-31
+
+### Task 5: PostgreSQL Queries
+- **Objective:** Develop the five required SQL queries as per the assignment brief.
+- **Query 5a (Multi-Join):**
+    - Implemented as a stored procedure `get_comprehensive_commit_details()`.
+    - Joins four tables (`users`, `repositories`, `commits`, `comments`) using `INNER JOIN` and `LEFT JOIN`.
+    - Includes a `WHERE` clause to restrict results based on the size of the `changed_files` array.
+    - Added a `CALL` statement to execute the procedure and a `SELECT` to display the results from the temporary table it creates.
+- **Query 5b (Set Operator):**
+    - Implemented as a stored procedure `get_active_users()`.
+    - Uses the `UNION` operator to combine the results of two `SELECT` statements, finding all users who have either authored a commit or reported a bug.
+    - Involves joins between three tables (`users`, `commits`, `bugs`).
+    - Added a `CALL` statement and a `SELECT` to show the results.
+- **Query 5c (Inheritance/Array & Stored Function):**
+    - Implemented as a stored function `get_bugs_for_repository(p_repo_id INT)` to fulfill the stored function requirement.
+    - The query selects directly from the `bugs` table, demonstrating a query on an inherited table.
+    - It also calculates the age of the bug report using the `AGE()` temporal function.
+    - Added a `SELECT` statement to execute the function and display its results.
+
 ---
 ### Session End: 2025-07-31
