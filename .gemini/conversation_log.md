@@ -118,3 +118,17 @@ This file tracks the progress of our work on "Assignment Two".
 
 ---
 ### Session End: 2025-07-30
+
+---
+## Session 6: 2025-07-31
+
+### Task 2: PostgreSQL Implementation (Continued)
+- **Objective:** Build the object-relational schema in `postgres/queries.sql` step-by-step.
+- **Action:**
+    - Added `DROP` statements for all tables and types to ensure a clean slate.
+    - Defined the `issue_status` ENUM type.
+    - Created the `users` table.
+    - Created the `repositories` table with a foreign key to `users`.
+    - Created the `commits` table with foreign keys to `users` and `repositories`.
+    - Added a comment to the `commits` table definition to explain why `commit_id` is of type `TEXT` (to store a hash) rather than a `SERIAL`.
+- **Reasoning:** This methodical approach ensures each table is created in the correct order with the necessary relationships, following the UML diagram.
