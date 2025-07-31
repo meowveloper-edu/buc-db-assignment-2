@@ -123,12 +123,19 @@ This file tracks the progress of our work on "Assignment Two".
 ## Session 6: 2025-07-31
 
 ### Task 2: PostgreSQL Implementation (Continued)
-- **Objective:** Build the object-relational schema in `postgres/queries.sql` step-by-step.
-- **Action:**
+- **Objective:** Build the object-relational schema in `postgres/queries.sql` step-by-step and complete data population.
+- **Action (Schema):**
     - Added `DROP` statements for all tables and types to ensure a clean slate.
     - Defined the `issue_status` ENUM type.
-    - Created the `users` table.
-    - Created the `repositories` table with a foreign key to `users`.
-    - Created the `commits` table with foreign keys to `users` and `repositories`.
-    - Added a comment to the `commits` table definition to explain why `commit_id` is of type `TEXT` (to store a hash) rather than a `SERIAL`.
-- **Reasoning:** This methodical approach ensures each table is created in the correct order with the necessary relationships, following the UML diagram.
+    - Created the `users`, `repositories`, `commits`, `issues` (parent), `bugs` (child), `feature_requests` (child), and `comments` tables.
+- **Action (Data Population):**
+    - Populated all tables with sample data in a sequential, step-by-step process, starting with `users` and ending with `comments`.
+- **Debugging (Foreign Key Inheritance):**
+    - **Problem:** Encountered a foreign key violation when inserting comments linked to issues. This is a known PostgreSQL limitation where a foreign key on a parent table (`issues`) does not see the data in its child tables (`bugs`, `feature_requests`).
+    - **Solution:** Replaced the standard foreign key constraint with a trigger. A function (`check_issue_exists`) was created to manually verify that the `issue_id` exists in the `issues` hierarchy before an insert/update on the `comments` table.
+- **Debugging (Trigger Syntax):**
+    - **Problem:** The `CREATE FUNCTION` statement failed due to a syntax error when the script was executed. The `psql` client misinterpreted the `$$` delimiters.
+    - **Solution:** Modified the trigger function definition to use named dollar quoting (`$FUNCTION$`), which provides a more robust way to define the function body and resolves the syntax error.
+- **Status:** The `postgres/queries.sql` script is now complete and executes successfully, fully creating and populating the object-relational database as per the requirements for Task 2.
+---
+### Session End: 2025-07-31

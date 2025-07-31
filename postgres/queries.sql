@@ -79,6 +79,7 @@ CREATE TABLE feature_requests (
 
 -- Comments table
 -- A comment can be linked to an issue OR a commit, but not both.
+-- The FOREIGN KEY to issues is handled by a trigger because of inheritance.
 CREATE TABLE comments (
     comment_id SERIAL PRIMARY KEY,
     text TEXT NOT NULL,
@@ -87,13 +88,30 @@ CREATE TABLE comments (
     issue_id INT,
     commit_id TEXT,
     FOREIGN KEY (author_id) REFERENCES users(user_id),
-    FOREIGN KEY (issue_id) REFERENCES issues(issue_id),
     FOREIGN KEY (commit_id) REFERENCES commits(commit_id),
     CONSTRAINT chk_comment_parent CHECK (
         (issue_id IS NOT NULL AND commit_id IS NULL) OR
         (issue_id IS NULL AND commit_id IS NOT NULL)
     )
 );
+
+-- Trigger function to validate the foreign key to the issues table manually.
+CREATE OR REPLACE FUNCTION check_issue_exists()
+RETURNS TRIGGER AS $FUNCTION$
+BEGIN
+    IF NEW.issue_id IS NOT NULL THEN
+        IF NOT EXISTS (SELECT 1 FROM issues WHERE issue_id = NEW.issue_id) THEN
+            RAISE EXCEPTION 'Foreign key violation: issue_id % not found in issues hierarchy', NEW.issue_id;
+        END IF;
+    END IF;
+    RETURN NEW;
+END;
+$FUNCTION$ LANGUAGE plpgsql;
+
+-- Trigger to enforce the check on the comments table.
+CREATE TRIGGER trg_check_comment_issue
+BEFORE INSERT OR UPDATE ON comments
+FOR EACH ROW EXECUTE FUNCTION check_issue_exists();
 
 -- Insert sample data
 
