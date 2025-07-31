@@ -143,21 +143,30 @@ This file tracks the progress of our work on "Assignment Two".
 
 ### Task 5: PostgreSQL Queries
 - **Objective:** Develop the five required SQL queries as per the assignment brief.
+- **Debugging (Dependency Order):**
+    - **Problem:** The script failed because it tried to `DROP TYPE issue_status` before dropping the function `get_bugs_for_repository` that depended on it.
+    - **Solution:** Added `DROP FUNCTION` and `DROP PROCEDURE` statements at the very beginning of the script to ensure objects are dropped in the correct order, resolving the dependency error.
 - **Query 5a (Multi-Join):**
     - Implemented as a stored procedure `get_comprehensive_commit_details()`.
     - Joins four tables (`users`, `repositories`, `commits`, `comments`) using `INNER JOIN` and `LEFT JOIN`.
     - Includes a `WHERE` clause to restrict results based on the size of the `changed_files` array.
-    - Added a `CALL` statement to execute the procedure and a `SELECT` to display the results from the temporary table it creates.
+    - Added a `CALL` statement to execute the procedure and a `SELECT` to display the results.
 - **Query 5b (Set Operator):**
     - Implemented as a stored procedure `get_active_users()`.
     - Uses the `UNION` operator to combine the results of two `SELECT` statements, finding all users who have either authored a commit or reported a bug.
-    - Involves joins between three tables (`users`, `commits`, `bugs`).
     - Added a `CALL` statement and a `SELECT` to show the results.
 - **Query 5c (Inheritance/Array & Stored Function):**
     - Implemented as a stored function `get_bugs_for_repository(p_repo_id INT)` to fulfill the stored function requirement.
     - The query selects directly from the `bugs` table, demonstrating a query on an inherited table.
     - It also calculates the age of the bug report using the `AGE()` temporal function.
-    - Added a `SELECT` statement to execute the function and display its results.
+    - Added a `SELECT` statement to execute the function.
+- **Query 5d (Temporal):**
+    - Implemented a query to find pairs of commits made within a 5-minute interval in the same repository.
+    - Uses a self-join on the `commits` table and calculates the difference between timestamps.
+- **Query 5e (OLAP):**
+    - Implemented a query using `GROUP BY ROLLUP` on two dimensions (repository name and issue status).
+    - Generates a summary report of issue counts with subtotals for each repository and a grand total.
+- **Status:** All five required SQL queries for Task 5 are complete and included in the `postgres/queries.sql` script.
 
 ---
 ### Session End: 2025-07-31

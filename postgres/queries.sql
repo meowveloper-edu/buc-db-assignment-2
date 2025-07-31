@@ -1,4 +1,5 @@
 -- Drop existing functions and procedures to avoid dependency errors.
+DROP FUNCTION IF EXISTS check_issue_exists();
 DROP FUNCTION IF EXISTS get_bugs_for_repository(INT);
 DROP PROCEDURE IF EXISTS get_comprehensive_commit_details();
 DROP PROCEDURE IF EXISTS get_active_users();
