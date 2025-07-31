@@ -1,6 +1,10 @@
+-- Drop existing functions and procedures to avoid dependency errors.
+DROP FUNCTION IF EXISTS get_bugs_for_repository(INT);
+DROP PROCEDURE IF EXISTS get_comprehensive_commit_details();
+DROP PROCEDURE IF EXISTS get_active_users();
+
 -- Drop existing tables and types to ensure a clean slate.
 -- The order is important to avoid foreign key constraint errors.
-
 DROP TABLE IF EXISTS comments CASCADE;
 DROP TABLE IF EXISTS bugs CASCADE;
 DROP TABLE IF EXISTS feature_requests CASCADE;
