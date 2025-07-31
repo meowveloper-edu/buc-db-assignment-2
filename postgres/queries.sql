@@ -1,5 +1,4 @@
 -- Drop existing functions and procedures to avoid dependency errors.
-DROP FUNCTION IF EXISTS check_issue_exists();
 DROP FUNCTION IF EXISTS get_bugs_for_repository(INT);
 DROP PROCEDURE IF EXISTS get_comprehensive_commit_details();
 DROP PROCEDURE IF EXISTS get_active_users();
@@ -20,6 +19,7 @@ DROP TYPE IF EXISTS issue_status;
 
 -- Create user-defined types
 CREATE TYPE issue_status AS ENUM ('Open', 'In Progress', 'Closed');
+DROP FUNCTION IF EXISTS check_issue_exists();
 
 
 -- Create tables for the source code repository system
