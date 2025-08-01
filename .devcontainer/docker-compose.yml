@@ -3,7 +3,7 @@ services:
         image: ghcr.io/meowveloper-edu/db-assignment-2:v1.0.0
         volumes:
             - ..:/workspaces/db-assignment-2
-        command: sh -c "mkdir -p ../data && echo 'sleeping infinity' && sleep infinity"
+        command: sh -c "mkdir -p ../.data && echo 'sleeping infinity' && sleep infinity"
         depends_on:
             - postgres
             - mongo
@@ -12,10 +12,11 @@ services:
         image: postgres:14.18
         restart: always
         environment:
+            POSTGRES_DB: git_repo_db
             POSTGRES_USER: user
             POSTGRES_PASSWORD: password
         volumes:
-            - ../data/postgres:/var/lib/postgresql/data
+            - ../.data/postgres:/var/lib/postgresql/data
         ports:
             - "5432:5432"
 
@@ -26,7 +27,7 @@ services:
             MONGO_INITDB_ROOT_USERNAME: user
             MONGO_INITDB_ROOT_PASSWORD: password
         volumes:
-            - ../data/mongo:/data/db
+            - ../.data/mongo:/data/db
         ports:
             - "27017:27017"
     
