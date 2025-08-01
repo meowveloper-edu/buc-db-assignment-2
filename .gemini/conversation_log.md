@@ -214,6 +214,12 @@ This file tracks the progress of our work on "Assignment Two".
     - Used `$lookup` to perform a left outer join with the `users` collection to fetch commit author details.
     - Used `$project` to reshape the output to match the desired format.
     - This successfully replicates the functionality of the multi-join SQL query.
+- **Query 6b (Set Operator Equivalent):**
+    - Implemented a multi-step aggregation process in `mongo/queries.js`.
+    - First, aggregated distinct user IDs for commit authors.
+    - Second, aggregated distinct user IDs for bug reporters.
+    - Combined the two lists of IDs programmatically.
+    - Finally, used the combined list with a `$in` operator to find all matching users. This correctly mimics the SQL `UNION` functionality.
 
 ---
 ### Session End: 2025-08-02

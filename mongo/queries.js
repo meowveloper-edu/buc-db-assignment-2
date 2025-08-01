@@ -200,5 +200,80 @@ const query6b_result = db.users.find(
 
 printjson(query6b_result);
 
+print("\n--- Query 6c: Bugs for a Repository (Inheritance/Array Equivalent) ---");
+const query6c_result = db.repositories.aggregate([
+  // Find the specific repository
+  { $match: { _id: 1 } },
+  // Deconstruct the issues array
+  { $unwind: "$issues" },
+  // Filter for issues that are bugs
+  { $match: { "issues.issue_type": "bug" } },
+  // Replace the root document with the issue sub-document
+  { $replaceWith: "$issues" },
+  // Project to show relevant fields
+  {
+    $project: {
+      _id: "$issue_id",
+      title: 1,
+      status: 1,
+      severity: 1,
+      created_at: 1
+    }
+  }
+]).toArray();
+
+printjson(query6c_result);
+
+print("\n--- Query 6d: Commits within a 5-Minute Interval (Temporal Equivalent) ---");
+const query6d_result = db.repositories.aggregate([
+  // Unwind the commits array to get one document per commit (c1)
+  { $unwind: "$commits" },
+  // Perform a lookup to get the full repository document again for a self-join
+  {
+    $lookup: {
+      from: "repositories",
+      localField: "_id",
+      foreignField: "_id",
+      as: "repo_copy"
+    }
+  },
+  // Unwind the copied repository document
+  { $unwind: "$repo_copy" },
+  // Unwind the commits array from the copied repository to get c2
+  { $unwind: "$repo_copy.commits" },
+  // Match to find pairs of commits within the 5-minute interval
+  {
+    $match: {
+      $expr: {
+        $and: [
+          // Must be in the same repository (this is implicitly handled by the lookups)
+          // Must be different commits
+          { $ne: ["$commits.commit_hash", "$repo_copy.commits.commit_hash"] },
+          // Ensure c2 is after c1 to avoid duplicate pairs and have a logical order
+          { $gt: ["$repo_copy.commits.timestamp", "$commits.timestamp"] },
+          // Check if the difference is less than 5 minutes (300000 ms)
+          { $lt: [{ $subtract: ["$repo_copy.commits.timestamp", "$commits.timestamp"] }, 5 * 60 * 1000] }
+        ]
+      }
+    }
+  },
+  // Project the final output
+  {
+    $project: {
+      _id: 0,
+      repository_name: "$name",
+      commit1_hash: "$commits.commit_hash",
+      commit1_timestamp: "$commits.timestamp",
+      commit2_hash: "$repo_copy.commits.commit_hash",
+      commit2_timestamp: "$repo_copy.commits.timestamp"
+    }
+  }
+]).toArray();
+
+printjson(query6d_result);
+
+
+
+
 
 
