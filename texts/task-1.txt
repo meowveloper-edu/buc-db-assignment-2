@@ -1,0 +1,7 @@
+## Diagram Explanation
+The above UML Class Diagram (Figure 1) represents the entities for a source code repository management system. The diagram shows five main entities User, Repository, Commit, Comment and Issue. Issue is an abstract class. Bug and FeatureRequest are also included in the diagram. They are concrete implementations of Issue.
+### Relationships
+- Association: These relationships link a User to the Repository they own and Commit, Issue and Comment they author. They can be said as simple links or relationships between independent objects.
+- Inheritance: Bug and FeatureRequest inherit from the Issue class, meaning that both Bug and FeatureRequest can be abstracted as an Issue.
+- Aggregation: A Repository will have a collection of Commit(s) or can be said that a Repository is a collection of Commit(s), but, in theory, a Commit can be moved between Repositories or can exist on their own. Such weak dependency between these two entities makes aggregation relationship more suitable.
+- Composition: This defines the relationships between Repository & Issue and Comment & Issue. That means there is an strong ownership between those entities. An Issue is tied to a Repository and cannot exist or meaningless without it. Also, a Comment only exist within a specific Issue. Deleting a Repository will also cascade and delete its Issues and deleting an Issue will also cascade and delete its Comments
