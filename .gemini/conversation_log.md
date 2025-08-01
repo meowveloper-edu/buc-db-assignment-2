@@ -177,3 +177,22 @@ This file tracks the progress of our work on "Assignment Two".
 
 ---
 ### Session End: 2025-07-31
+
+---
+## Session 8: 2025-08-02
+
+### Task 3: MongoDB Implementation
+- **Objective:** Begin implementing the MongoDB database schema.
+- **Action:**
+    - Started the `mongo/queries.js` script.
+    - Added a command to switch to the `git_repo_db` database using `db.getSiblingDB()`.
+    - Implemented the first step: dropping the `users` collection if it exists and inserting the three users from the sample data. The `_id` field was manually set to match the PostgreSQL `user_id` for consistency.
+- **Discussion:**
+    - Explained the purpose of `getSiblingDB()` as a robust method for switching databases within a script.
+- **Action (Continued):**
+    - Updated `mongo/queries.js` to create the `repositories` collection.
+    - To demonstrate a key document-store feature, the `commits`, `issues`, and `comments` data were embedded as arrays of sub-documents within their parent repository.
+    - Inheritance was handled by adding an `issue_type` field to the issue sub-documents, distinguishing between "bug" and "feature_request".
+
+---
+### Session End: 2025-08-02
