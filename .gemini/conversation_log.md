@@ -193,6 +193,27 @@ This file tracks the progress of our work on "Assignment Two".
     - Updated `mongo/queries.js` to create the `repositories` collection.
     - To demonstrate a key document-store feature, the `commits`, `issues`, and `comments` data were embedded as arrays of sub-documents within their parent repository.
     - Inheritance was handled by adding an `issue_type` field to the issue sub-documents, distinguishing between "bug" and "feature_request".
+- **Database Naming:**
+    - **Problem:** The PostgreSQL database was being named `user` by default, while the MongoDB database was `git_repo_db`.
+    - **Solution:**
+        - Modified `.devcontainer/docker-compose.yml` to add the `POSTGRES_DB: git_repo_db` environment variable, ensuring the database is created with the correct name.
+        - Updated `postgres/run.sh` to connect to `git_repo_db` instead of `user`.
+
+---
+### Session End: 2025-08-02
+
+---
+## Session 9: 2025-08-02
+
+### Task 6: MongoDB Queries
+- **Objective:** Develop the five required MongoDB queries equivalent to the PostgreSQL queries.
+- **Query 6a (Multi-Join Equivalent):**
+    - Implemented an aggregation pipeline in `mongo/queries.js`.
+    - Used `$unwind` to deconstruct the `commits` array.
+    - Used `$match` to filter for commits with more than one changed file.
+    - Used `$lookup` to perform a left outer join with the `users` collection to fetch commit author details.
+    - Used `$project` to reshape the output to match the desired format.
+    - This successfully replicates the functionality of the multi-join SQL query.
 
 ---
 ### Session End: 2025-08-02

@@ -140,3 +140,65 @@ db.repositories.insertMany([
 ]);
 
 print("Successfully created 'repositories' collection.");
+
+// --- Task 6: MongoDB Queries ---
+
+print("\n--- Query 6a: Comprehensive Commit Details (Multi-Join Equivalent) ---");
+const query6a_result = db.repositories.aggregate([
+  // Deconstruct the commits array
+  { $unwind: "$commits" },
+  // Filter for commits with more than one changed file
+  { $match: { "commits.changed_files.1": { $exists: true } } },
+  // Join with users collection to get author's username
+  {
+    $lookup: {
+      from: "users",
+      localField: "commits.author_id",
+      foreignField: "_id",
+      as: "author_details"
+    }
+  },
+  // Deconstruct the author_details array (it will only have one element)
+  { $unwind: "$author_details" },
+  // Reshape the output
+  {
+    $project: {
+      _id: 0,
+      repository_name: "$name",
+      commit_hash: "$commits.commit_hash",
+      commit_message: "$commits.message",
+      author_username: "$author_details.username",
+      timestamp: "$commits.timestamp"
+    }
+  }
+]).toArray();
+
+printjson(query6a_result);
+
+print("\n--- Query 6b: Active Users (Set Operator Equivalent) ---");
+// Get distinct user IDs from commit authors
+const commit_authors = db.repositories.aggregate([
+  { $unwind: "$commits" },
+  { $group: { _id: "$commits.author_id" } }
+]).toArray().map(u => u._id);
+
+// Get distinct user IDs from bug reporters
+const bug_reporters = db.repositories.aggregate([
+  { $unwind: "$issues" },
+  { $match: { "issues.issue_type": "bug" } },
+  { $group: { _id: "$issues.reporter_id" } }
+]).toArray().map(u => u._id);
+
+// Combine and get unique IDs
+const active_user_ids = [...new Set([...commit_authors, ...bug_reporters])];
+
+// Fetch the full user documents for the active users
+const query6b_result = db.users.find(
+  { _id: { $in: active_user_ids } },
+  { _id: 0, username: 1, email: 1 }
+).toArray();
+
+printjson(query6b_result);
+
+
+
