@@ -272,6 +272,42 @@ const query6d_result = db.repositories.aggregate([
 
 printjson(query6d_result);
 
+print("\n--- Query 6e: Issue Count Summary (OLAP Equivalent) ---");
+const query6e_result = db.repositories.aggregate([
+  // Deconstruct the issues array
+  { $unwind: "$issues" },
+  // Use $rollup to generate subtotals and a grand total
+  {
+    $rollup: {
+      _id: {
+        repository_name: "$name",
+        status: "$issues.status"
+      },
+      issue_count: { $sum: 1 }
+    }
+  },
+  // Sort for a clean, ordered report
+  {
+    $sort: {
+      "_id.repository_name": 1,
+      "_id.status": 1
+    }
+  },
+  // Project to format the output nicely and add descriptive labels
+  {
+    $project: {
+      _id: 0,
+      repository_name: { $ifNull: ["$_id.repository_name", "Grand Total"] },
+      status: { $ifNull: ["$_id.status", "All Statuses"] },
+      issue_count: 1
+    }
+  }
+]).toArray();
+
+printjson(query6e_result);
+
+
+
 
 
 

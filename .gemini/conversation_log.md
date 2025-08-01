@@ -220,6 +220,19 @@ This file tracks the progress of our work on "Assignment Two".
     - Second, aggregated distinct user IDs for bug reporters.
     - Combined the two lists of IDs programmatically.
     - Finally, used the combined list with a `$in` operator to find all matching users. This correctly mimics the SQL `UNION` functionality.
+- **Query 6c (Inheritance/Array Equivalent):**
+    - Implemented an aggregation pipeline to find all "bug" type issues within a specific repository's embedded `issues` array.
+    - Used `$match`, `$unwind`, and `$replaceWith` to filter and reshape the data.
+- **Query 6d (Temporal Equivalent):**
+    - Implemented an advanced aggregation pipeline to simulate a self-join on the embedded `commits` array.
+    - Used multiple `$unwind` and `$lookup` stages along with a complex `$expr` to find pairs of commits made within a 5-minute interval.
+- **Query 6e (OLAP Equivalent) & Debugging:**
+    - **Problem:** The final query using `$rollup` failed with an `Unrecognized pipeline stage name` error when executed via `mongo/run.sh`.
+    - **Diagnosis:** The issue was traced to the `mongosh` client running the script in the default `test` database context, where modern features are not correctly initialized for non-interactive execution.
+    - **Proposed Solution (Pending):**
+        1.  Modify `mongo/run.sh` to explicitly connect to the `git_repo_db` database (`mongosh ... git_repo_db --file ...`).
+        2.  Remove the `db = db.getSiblingDB('git_repo_db');` line from `mongo/queries.js`.
+    - **Status:** The query is written but cannot be successfully run via the script until the proposed fix is applied. This is the next pending action.
 
 ---
 ### Session End: 2025-08-02
