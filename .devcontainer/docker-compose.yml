@@ -1,12 +1,14 @@
 services:
     app:
-        image: ghcr.io/meowveloper-edu/db-assignment-2:v1.0.0
+        # image: ghcr.io/meowveloper-edu/db-assignment-2:v1.0.0
+        image: db-assignment-2:v1.0.0
         volumes:
             - ..:/workspaces/db-assignment-2
         command: sh -c "mkdir -p ../.data && echo 'sleeping infinity' && sleep infinity"
         depends_on:
             - postgres
             - mongo
+            - oracle
 
     postgres:
         image: postgres:14.18
@@ -30,6 +32,18 @@ services:
             - ../.data/mongo:/data/db
         ports:
             - "27017:27017"
+
+    oracle:
+        image: gvenzl/oracle-free:latest
+        restart: always
+        environment:
+            ORACLE_PASSWORD: password
+            APP_USER: app_user
+            APP_USER_PASSWORD: password
+        volumes:
+            - ../.data/oracle:/opt/oracle/oradata
+        ports:
+            - 1521:1521
     
     adminer:
         image: adminer:5.3.0
@@ -38,6 +52,7 @@ services:
             - "8080:8080"
         depends_on:
             - postgres
+            - oracle
 
     mongo-express:
         image: mongo-express:1.0.2-20-alpine3.19

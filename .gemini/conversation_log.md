@@ -236,3 +236,50 @@ This file tracks the progress of our work on "Assignment Two".
 
 ---
 ### Session End: 2025-08-02
+---
+## Session 10: 2025-08-02
+
+### Pivoting from PostgreSQL to Oracle
+- **Objective:** Re-evaluate the choice of database for the object-relational implementation.
+- **Discussion:**
+    - The user raised concerns about the marker's potential unfamiliarity with PostgreSQL's specific object-relational features (like table inheritance).
+    - The user also noted the requirement for "nested tables," which is a specific Oracle feature.
+    - While the PostgreSQL implementation is functionally correct and complete, it might not align with the marker's expectations for specific Oracle syntax (`CREATE TYPE ... AS OBJECT`, `REF` pointers, nested tables).
+- **Decision:**
+    - To mitigate the risk of misinterpretation during marking, we have decided to **switch from PostgreSQL to Oracle** for Tasks 2 and 5.
+    - This involves discarding the existing `postgres/queries.sql` script and creating a new implementation from scratch using Oracle's object-relational model.
+- **Next Steps:**
+    - Create a new `oracle/` directory.
+    - Begin development of the Oracle schema (`CREATE TYPE`, `CREATE TABLE`), data insertion, and queries.
+
+---
+### Session End: 2025-08-02
+---
+## Session 11: 2025-08-02
+
+### Oracle Environment Setup & Troubleshooting
+- **Objective:** Configure a stable Oracle development environment using Docker.
+- **Action (Dockerfile):**
+    - Updated the `app` service's Dockerfile to install the Oracle Instant Client and SQL*Plus, enabling the container to connect to the Oracle database.
+- **Action (Docker Compose):**
+    - Added a new `oracle` service to the `docker-compose.yml` file.
+- **Troubleshooting (Initial Setup):**
+    - **Problem 1: `ORA-01935: missing user or role name`**. The initial username `user` is a reserved keyword in Oracle.
+        - **Solution:** Changed the application username to `app_user`.
+    - **Problem 2: `ORA-00205: error in identifying control file`**. This occurred after switching to a new Oracle image (`gvenzl/oracle-free:slim-faststart`) because it was incompatible with the data files left by the previous image.
+        - **Solution:** Performed a full environment cleanup by running `docker compose down --volumes` and removing the `.data/oracle` directory to ensure a completely fresh start.
+    - **Problem 3: Persistent `ORA-00205` error**. The `slim-faststart` image proved to be unreliable in the development environment.
+        - **Solution:** Switched to the standard `gvenzl/oracle-free:latest` image, which builds the database from scratch and is more robust.
+- **Final Configuration:**
+    - The `docker-compose.yml` is now configured to use `gvenzl/oracle-free:latest`.
+    - It successfully creates an `app_user` on startup.
+    - The database starts reliably and is ready for connections.
+- **Testing:**
+    - Successfully connected to the Oracle database from the `app` container using `sqlplus app_user/password@oracle:1521/FREEPDB1`.
+    - Initial tests of the `queries.sql` script revealed issues with `DROP` statements and duplicate `CREATE` statements.
+- **Status:**
+    - The Oracle development environment is now fully functional and stable.
+    - The `oracle/queries.sql` file has been cleared to prepare for the next session.
+
+---
+### Session End: 2025-08-02
