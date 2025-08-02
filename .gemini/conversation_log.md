@@ -283,3 +283,24 @@ This file tracks the progress of our work on "Assignment Two".
 
 ---
 ### Session End: 2025-08-02
+---
+## Session 12: 2025-08-02
+
+### Task 2: Oracle Scripting & Environment Refinement
+- **Objective:** Begin the Oracle implementation and refine the development environment for ease of use.
+- **Action (Environment):**
+    - Confirmed the connection target is the `FREEPDB1` pluggable database.
+    - Optimized the developer experience by adding the `TWO_TASK` environment variable to the `app` service in `docker-compose.yml`. This sets the default connection string, allowing for a simpler `sqlplus` command.
+    - Updated the `Dockerfile` to set the final `WORKDIR` to the project workspace for convenience.
+- **Action (Scripting):**
+    - Began creating the `oracle/queries.sql` script.
+    - Implemented robust, rerunnable `DROP` statements using `BEGIN...EXECUTE IMMEDIATE...EXCEPTION...END` blocks to handle cases where objects do not yet exist. This is the standard Oracle practice as `IF EXISTS` is not supported.
+    - Created the initial `user_t` object type and the `users` object table.
+- **Debugging (Client Compatibility):**
+    - **Problem:** The initial script, while working, produced an `ORA-00955: name is already used by an existing object` error when run in SQL*Plus due to how the client was handling statement termination.
+    - **Solution:** The script was corrected to follow universal Oracle conventions, ensuring it is client-agnostic. PL/SQL blocks and `CREATE TYPE` statements now end with a forward slash (`/`), and standard DDL like `CREATE TABLE` ends with a semicolon (`;`). This ensures the script runs correctly in both command-line tools (SQL*Plus) and GUI clients (SQL Developer).
+- **Status:** The Oracle environment is fully configured, and the `oracle/queries.sql` script has a solid, client-compatible foundation.
+
+---
+### Session End: 2025-08-02
+---

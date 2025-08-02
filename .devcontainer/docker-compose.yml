@@ -4,6 +4,8 @@ services:
         image: db-assignment-2:v1.0.0
         volumes:
             - ..:/workspaces/db-assignment-2
+        environment:
+            - TWO_TASK=oracle:1521/FREEPDB1
         command: sh -c "mkdir -p ../.data && echo 'sleeping infinity' && sleep infinity"
         depends_on:
             - postgres

@@ -36,3 +36,6 @@ RUN curl -o instantclient-basiclite.zip https://download.oracle.com/otn_software
 # Set environment variables for Oracle Client
 ENV LD_LIBRARY_PATH=/opt/oracle/instantclient_21_13
 ENV PATH=$PATH:/opt/oracle/instantclient_21_13
+
+# Set the final working directory back to the project workspace
+WORKDIR /workspaces/db-assignment-2
